@@ -3,11 +3,30 @@ import { fetchRecipes, addRecipe } from './api/recipes.js';
 import { renderRecipes } from './ui/render.js';
 import { setupEventListeners } from './ui/events.js';
 
+let allRecipes = [];
+
+// Funktion zum Laden und Rendern der Rezepte
+async function loadAndRenderRecipes() {
+  allRecipes = await fetchRecipes();
+  renderRecipes(allRecipes);
+}
+
+// Suche und Filter
+const searchInput = document.getElementById('search');
+searchInput.addEventListener('input', () => {
+  const query = searchInput.value.trim().toLowerCase();
+  const filtered = allRecipes.filter(recipe =>
+    recipe.title.toLowerCase().includes(query) ||
+    (recipe.tags && recipe.tags.some(tag => tag.toLowerCase().includes(query))) ||
+    (recipe.ingredients && recipe.ingredients.some(ingr => ingr.toLowerCase().includes(query)))
+  );
+  renderRecipes(filtered);
+});
+
 // Initialisiere die Anwendung, wenn die Seite geladen wird
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    const recipes = await fetchRecipes(); // Lade die Rezepte vom Backend
-    renderRecipes(recipes); // Zeige die Rezepte im DOM an
+    await loadAndRenderRecipes(); // Lade und zeige die Rezepte an
     setupEventListeners(); // Richte die Event-Listener ein
   } catch (error) {
     console.error('Fehler beim Laden der Rezepte:', error.message); // Logge den Fehler
@@ -55,3 +74,6 @@ document.getElementById('recipe-form').addEventListener('submit', async (event) 
   event.preventDefault(); // Verhindert das automatische Neuladen der Seite
   await handleAddRecipe(); // Führt die Funktion aus
 });
+
+// Initiales Laden der Rezepte
+loadAndRenderRecipes();
