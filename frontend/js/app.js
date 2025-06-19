@@ -1,6 +1,6 @@
 // Importiere die benötigten Funktionen
-import { fetchRecipes, addRecipe } from './js/api/recipes.js';
-import { renderRecipes } from './js/ui/render.js';
+import { fetchRecipes, addRecipe } from './api/recipes.js';
+import { renderRecipes } from './ui/render.js';
 
 let allRecipes = [];
 
