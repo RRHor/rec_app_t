@@ -31,6 +31,11 @@ export function recipeCardTemplate(recipe, tagsHTML, ingredientsHTML) {
           </span>
         </span>
       </div>
+      <!-- Sammlungshinweis unter dem Titel -->
+      ${recipe.collections && recipe.collections.length
+        ? `<div class="collection-label">Sammlungen: ${recipe.collections.join(', ')}</div>`
+        : ''
+      }
       <!-- Beschreibung des Rezepts -->
       <p class="recipe-description text-gray-700">${recipe.description}</p>
       <!-- Zutatenliste -->
