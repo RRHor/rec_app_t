@@ -1,4 +1,4 @@
-# rec_app_t
+# rec_app_t (noch im Aufbau)
 
 **Kleine Rezept-App im Comic-Stil**  
 Verwalte, bewerte und teile deine Lieblingsrezepte – einfach, bunt und barrierearm!
