@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rez-app-t</title>
+    <!-- Tailwind CSS für das Styling laden -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <!-- Eigenes CSS für zusätzliche Stile -->
+    <link rel="stylesheet" href="css/style.css" />
+    <!-- Comic-Schriftart für den Comic-Stil -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Klasse für Comic-Schriftart */
+      .font-comic {
+        font-family: "Comic Neue", sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-pink-300 text-gray-800 min-h-screen flex flex-col">
+    <!-- Header mit App-Titel -->
+    <header
+      class="bg-pink-800 p-8 px-4 text-center border-4 border-black shadow-[6px_6px_0_#000] rounded-md mx-4 mt-4"
+    >
+      <h1
+        class="text-4xl font-comic font-extrabold text-black tracking-wider mb-2"
+      >
+        Rez-APP-te
+      </h1>
+    </header>
+
+    <main
+      class="bg-yellow-300 p-6 rounded-lg shadow-[6px_6px_0_#000] border-4 border-black mx-4 mt-4"
+    >
+      <!-- Formular zum Hinzufügen eines neuen Rezepts -->
+      <section
+        id="add-recipe"
+        class="bg-white p-6 rounded-xl shadow-md border-4 border-black font-comic"
+      >
+        <!-- Bereich für Erfolgs-/Fehlermeldungen -->
+        <div
+          id="message"
+          class="hidden text-green-600 font-semibold mb-4"
+        ></div>
+
+        <h2 class="text-2xl font-semibold text-[#6C3D84] mb-4">
+          Neu
+        </h2>
+        <form id="recipe-form">
+          <!-- Eingabefeld für Rezeptname -->
+          <input
+            type="text"
+            id="title"
+            placeholder="Rezeptname"
+            required
+            class="input-field"
+            aria-label="Rezeptname"
+          />
+          <!-- Eingabefeld für Zubereitung -->
+          <textarea
+            id="description"
+            placeholder="Zubereitung"
+            required
+            class="input-field"
+            aria-label="Beschreibung"
+          ></textarea>
+          <!-- Eingabefeld für Zutaten -->
+          <input
+            type="text"
+            id="ingredients"
+            placeholder="Zutaten (Komma getrennt)"
+            required
+            class="input-field"
+            aria-label="Zutaten"
+          />
+          <!-- Eingabefeld für Bewertung -->
+          <input
+            type="number"
+            id="rating"
+            placeholder="Bewertung (1-5)"
+            class="input-field"
+            aria-label="Bewertung"
+          />
+          <!-- Eingabefeld für Tags -->
+          <input
+            type="text"
+            id="tags"
+            placeholder="Tags (Komma getrennt)"
+            class="input-field"
+            aria-label="Tags"
+          />
+          <!-- Eingabefeld für Kommentar -->
+          <input
+            type="text"
+            id="comment"
+            placeholder="Kommentar"
+            class="input-field"
+            aria-label="Kommentar"
+          />
+          <!-- Button zum Speichern des neuen Rezepts -->
+          <button
+            type="submit"
+            class="button"
+          >
+            Speichern
+          </button>
+        </form>
+      </section>
+
+      <!-- Bereich für die Liste der gespeicherten Rezepte -->
+      <section
+        id="recipe-list"
+        class="space-y-4 font-comic font-extrabold text-black tracking-wider mb-2 mt-3"
+      >
+        <h2 class="text-2xl font-semibold text-[#6C3D84]">
+          Gespeicherte Rezepte
+        </h2>
+        <!-- Hier werden die Rezeptkarten dynamisch eingefügt -->
+        <div id="recipes" class="space-y-4"></div>
+      </section>
+
+      <!-- Bearbeitungsformular (wird per JS ein- und ausgeblendet) -->
+      <div id="edit-form-container" style="display: none;">
+        <form id="edit-form">
+          <h3>Rezept bearbeiten</h3>
+          <label for="edit-title">Titel:</label>
+          <input id="edit-title" type="text" placeholder="Titel" required />
+          <label for="edit-description">Zubereitung:</label>
+          <textarea
+            id="edit-description"
+            placeholder="Zubereitung"
+            required
+          ></textarea>
+          <label for="edit-ingredients">Zutaten (kommagetrennt):</label>
+          <input
+            id="edit-ingredients"
+            type="text"
+            placeholder="Zutaten"
+            required
+          />
+          <label for="edit-tags">Tags (kommagetrennt):</label>
+          <input
+            id="edit-tags"
+            type="text"
+            placeholder="Tags"
+            required
+          />
+          <button id="save-edit" type="button" class="button">Speichern</button>
+          <button id="cancel-edit" type="button" class="button">Abbrechen</button>
+        </form>
+      </div>
+    </main>
+
+    <!-- Footer mit Copyright -->
+    <footer
+      class="font-comic bg-green-500 py-4 text-center text-sm text-gray-200 rounded-md border-4 border-black shadow-[6px_6px_0_#000] rounded-md mx-4 mt-4 mb-4"
+    >
+      &copy; 2025 Rea R. Horn. Kleine Rezept-App.
+    </footer>
+
+    <!-- Toast-Benachrichtigungen (werden per JS angezeigt) -->
+    <div
+      id="toast-container"
+      style="position: fixed; top: 20px; right: 20px; z-index: 1000"
+    ></div>
+
+    <!-- JavaScript-Module laden -->
+    <script src="./js/app.js" type="module" defer></script>
+    <script src="./js/ui/editForm.js" type="module" defer></script>
+    <script src="https://unpkg.com/rough-notation/lib/rough-notation.iife.js"></script>
+    <script type="module" src="./js/ui/render.js"></script>
+  </body>
+</html>
