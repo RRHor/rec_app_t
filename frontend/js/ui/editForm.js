@@ -13,12 +13,14 @@ export function openEditForm(recipe) {
   const descriptionInput = document.getElementById('edit-description');
   const ingredientsInput = document.getElementById('edit-ingredients');
   const tagsInput = document.getElementById('edit-tags');
+  const collectionsInput = document.getElementById('edit-collections');
 
   // Felder mit aktuellen Rezeptdaten füllen
   titleInput.value = recipe.title;
   descriptionInput.value = recipe.description;
   ingredientsInput.value = recipe.ingredients.join(', ');
   tagsInput.value = recipe.tags.join(', ');
+  collectionsInput.value = recipe.collections ? recipe.collections.join(', ') : '';
 
   const saveButton = document.getElementById('save-edit');
   if (!saveButton) {
@@ -33,6 +35,10 @@ export function openEditForm(recipe) {
       description: descriptionInput.value.trim(),
       ingredients: ingredientsInput.value.split(',').map(i => i.trim()),
       tags: tagsInput.value.split(',').map(t => t.trim()),
+      collections: collectionsInput.value
+        .split(',')
+        .map(c => c.trim())
+        .filter(Boolean),
     };
 
     try {
@@ -74,6 +80,9 @@ export function openEditFormInCard(recipeElement, recipe) {
   );
   const { wrapper: ingrWrapper, input: ingredientsInput } = createLabeledInput(
     'edit-ingredients-inline', 'Zutaten (Komma getrennt)', 'text', recipe.ingredients.join(', '), 'input-field input-ingredients w-full'
+  );
+  const { wrapper: collWrapper, input: collectionsInput } = createLabeledInput(
+    'edit-collections-inline', 'Sammlungen (Komma getrennt)', 'text', recipe.collections ? recipe.collections.join(', ') : '', 'input-field input-collections w-full'
   );
 
   // Tags als Chips bearbeiten (mit Entfernen und Hinzufügen)
@@ -161,6 +170,10 @@ export function openEditFormInCard(recipeElement, recipe) {
       description: descInput.value.trim(),
       ingredients: ingredientsInput.value.split(',').map(i => i.trim()),
       tags: tags,
+      collections: collectionsInput.value
+        .split(',')
+        .map(c => c.trim())
+        .filter(Boolean),
     };
     try {
       await updateRecipe(recipe._id, updatedRecipe);
