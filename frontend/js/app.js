@@ -1,6 +1,6 @@
 // Importiere die benötigten Funktionen
-import { fetchRecipes, addRecipe } from './js/api/recipes.js';
-import { renderRecipes } from './js/ui/render.js';
+import { fetchRecipes, addRecipe } from './api/recipes.js';
+import { renderComicPanels } from './ui/comicPanels.js';
 
 let allRecipes = [];
 
@@ -9,7 +9,8 @@ let allRecipes = [];
  */
 async function loadAndRenderRecipes() {
   allRecipes = await fetchRecipes();
-  renderRecipes(allRecipes);
+  renderComicPanels(allRecipes);
+  renderComicPanels(allRecipes); // Comic-Panels mit den Rezepten rendern
 }
 
 /**
@@ -30,7 +31,7 @@ function setupSearch() {
       (recipe.ingredients && recipe.ingredients.some(ingr => ingr.toLowerCase().includes(query))) ||
       (recipe.collections && recipe.collections.some(coll => coll.toLowerCase().includes(query)))
     );
-    renderRecipes(filtered);
+    renderComicPanels(filtered);
   });
 }
 

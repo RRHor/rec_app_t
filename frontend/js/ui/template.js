@@ -8,6 +8,14 @@
 export function recipeCardTemplate(recipe, tagsHTML, ingredientsHTML) {
   return `
     <div class="recipe-content relative">
+      <!-- Vertikale Bewertungssterne in der oberen linken Ecke -->
+      <div class="panel-stars-vertical">
+        ${[1, 2, 3, 4, 5].map(star => `
+          <span class="star ${star <= recipe.rating ? 'text-yellow-400' : 'text-gray-400'} cursor-pointer" data-value="${star}">
+            ★
+          </span>
+        `).join('<br>')}
+      </div>
       <!-- Tags und Tag-Hinzufügen-Feld nebeneinander -->
       <div class="comic-tags flex items-center flex-wrap gap-2 mb-2">
         ${recipe.tags.map(tag => `<span class="comic-tag">${tag}</span>`).join('')}
@@ -18,18 +26,9 @@ export function recipeCardTemplate(recipe, tagsHTML, ingredientsHTML) {
           </button>
         </div>
       </div>
-      <!-- Titel und Bewertung nebeneinander -->
+      <!-- Titel -->
       <div class="flex items-center gap-4 mb-2">
         <h2 class="recipe-title text-xl font-bold text-[#6C3D84] m-0">${recipe.title}</h2>
-        <span class="rating text-gray-800 font-semibold flex items-center">
-          <span class="stars">
-            ${[1, 2, 3, 4, 5].map(star => `
-              <span class="star ${star <= recipe.rating ? 'text-yellow-400' : 'text-gray-400'} cursor-pointer" data-value="${star}">
-                ★
-              </span>
-            `).join('')}
-          </span>
-        </span>
       </div>
       <!-- Sammlungshinweis unter dem Titel -->
       ${recipe.collections && recipe.collections.length

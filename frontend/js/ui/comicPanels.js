@@ -1,27 +1,34 @@
-import { deleteRecipe, fetchRecipes, updateRecipe } from "../api/recipes.js";
-import { openEditFormInCard } from './editForm.js';
 import { recipeCardTemplate } from './template.js';
+import { openEditFormInCard } from './editForm.js';
 import { handleCommentsToggle, handleDelete, handleRating, handleTags } from './eventHandler.js';
-import { showToast } from './toast.js'; // Importiere die Toast-Funktion
+import { fetchRecipes, deleteRecipe, updateRecipe } from "../api/recipes.js";
+import { showToast } from './toast.js';
 
-// Funktion: Zeigt alle Rezepte im DOM an
-export function renderRecipes(recipes) {
-  const recipesContainer = document.getElementById('recipes');
-  recipesContainer.innerHTML = ''; // Vorherige Rezepte entfernen
+/**
+ * Rendert die Rezepte als Comic-Panels in das Grid.
+ * @param {Array} recipes - Array mit Rezept-Objekten
+ */
+export function renderComicPanels(recipes) {
+  const panelsContainer = document.getElementById('comic-panels');
+  if (!panelsContainer) return;
+  panelsContainer.innerHTML = '';
 
   recipes.forEach((recipe) => {
-    // Zutatenliste als HTML-Liste erzeugen
-    const ingredientsHTML = recipe.ingredients.map(ingredient => `<li>${ingredient}</li>`).join('');
-    // Tags als HTML (wird aktuell nicht mehr für die Anzeige genutzt, da Chips oben angezeigt werden)
-    const tagsHTML = recipe.tags.map(tag => `<span class="tag bg-yellow-300 px-2 py-1 rounded-md">${tag}</span>`).join(' ');
+    // Dynamische Größenlogik: Passe die Bedingungen nach Wunsch an!
+    let sizeClass = 'small';
+    const textLength = (recipe.description?.length || 0) + (recipe.ingredients?.join(',').length || 0);
 
-    // Rezeptkarten-Element erzeugen
+    if (textLength > 400 || (recipe.ingredients && recipe.ingredients.length > 10)) {
+      sizeClass = 'large';
+    } else if (textLength > 200 || (recipe.ingredients && recipe.ingredients.length > 5)) {
+      sizeClass = 'medium';
+    }
+
     const recipeElement = document.createElement('div');
-    recipeElement.className = `comic-panel`;
-    recipeElement.innerHTML = recipeCardTemplate(recipe, tagsHTML, ingredientsHTML);
+    recipeElement.className = `comic-panel ${sizeClass}`;
+    recipeElement.innerHTML = recipeCardTemplate(recipe);
 
-    // Rezeptkarte zum Container hinzufügen
-    recipesContainer.appendChild(recipeElement);
+    panelsContainer.appendChild(recipeElement);
 
     // Kommentarbereich und Umschalt-Button finden und Event-Handler setzen
     const toggleCommentsButton = recipeElement.querySelector('.toggle-comments');
@@ -30,16 +37,16 @@ export function renderRecipes(recipes) {
 
     // Löschen-Button finden und Event-Handler setzen
     const deleteButton = recipeElement.querySelector('.delete-button');
-    handleDelete(deleteButton, recipe._id, fetchRecipes, renderRecipes);
+    handleDelete(deleteButton, recipe._id, fetchRecipes, renderComicPanels);
 
     // Bewertungssterne finden und Event-Handler setzen
     const stars = recipeElement.querySelectorAll('.star');
-    handleRating(stars, recipe._id, fetchRecipes, renderRecipes);
+    handleRating(stars, recipe._id, fetchRecipes, renderComicPanels);
 
     // Tag-Hinzufügen-Button und Tag-Input finden und Event-Handler setzen
     const addTagButton = recipeElement.querySelector('.add-tag-button');
     const tagInput = recipeElement.querySelector('.tag-input');
-    handleTags(addTagButton, tagInput, { ...recipe, tags: recipe.tags || [] }, recipe._id, fetchRecipes, renderRecipes);
+    handleTags(addTagButton, tagInput, { ...recipe, tags: recipe.tags || [] }, recipe._id, fetchRecipes, renderComicPanels);
 
     // Toast-Benachrichtigung beim Löschen anzeigen
     deleteButton.addEventListener('click', () => {
